@@ -4,7 +4,7 @@ A small utility that provdes a way to encode errors with namespaces and integers
 
 ## Usage
 
-```gol
+```go
 import "github.com/ngerakines/codederror"
 
 func awesome() string, err {
