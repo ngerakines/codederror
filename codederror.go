@@ -8,40 +8,40 @@ import (
 var codedErrorMin = 0
 var codedErrorMax = 33554431
 var codedErrorLength = 5
-var codedErrorCharacterCount = 33
+var codedErrorCharacterCount = 31
 var codedErrorCharacters = map[int]string{
-    0: "A",
-    1: "B",
-    2: "C",
-    3: "D",
-    4: "E",
-    5: "F",
-    6: "G",
-    7: "H",
-    8: "J",
-    9: "K",
-    10: "L",
-    11: "M",
-    12: "N",
-    13: "P",
-    14: "Q",
-    15: "R",
-    16: "S",
-    17: "T",
-    18: "U",
-    19: "V",
-    20: "W",
-    21: "X",
-    22: "Y",
-    23: "Z",
-    24: "2",
-    25: "3",
-    26: "4",
-    27: "5",
-    28: "6",
-    29: "7",
-    30: "8",
-    31: "9",
+	1:  "A",
+	2:  "B",
+	3:  "C",
+	4:  "D",
+	5:  "E",
+	6:  "F",
+	7:  "G",
+	8:  "H",
+	9:  "J",
+	10: "K",
+	11: "L",
+	12: "M",
+	13: "N",
+	14: "P",
+	15: "Q",
+	16: "R",
+	17: "S",
+	18: "T",
+	19: "U",
+	20: "V",
+	21: "W",
+	22: "X",
+	23: "Y",
+	24: "Z",
+	25: "2",
+	26: "3",
+	27: "4",
+	28: "5",
+	29: "6",
+	30: "7",
+	31: "8",
+	32: "9",
 }
 
 type CodedError struct {
@@ -50,23 +50,26 @@ type CodedError struct {
 }
 
 func encode(code uint16) string {
-    if int(code) < codedErrorCharacterCount {
-        return codedErrorCharacters[int(code)]
-    }
-    places := make([]string, 5)
-    num := int(code)
-    place := 0
-    for {
-        remainder := num % codedErrorCharacterCount
-        places[place] = codedErrorCharacters[remainder]
-        num = num / codedErrorCharacterCount;
-        place++
-        if num <= 0 {
-            break
-        }
-    }
-    
-    return strings.Join(places, "")
+	if int(code) <= codedErrorCharacterCount {
+		return codedErrorCharacters[int(code)+1]
+	}
+	places := make([]string, 5)
+	num := int(code)
+	place := 0
+	for {
+		remainder := num % codedErrorCharacterCount
+		digit := codedErrorCharacters[remainder]
+		places[place] = digit
+		place++
+		num = num / codedErrorCharacterCount
+		if num < 1 {
+			break
+		}
+	}
+	for i, j := 0, len(places)-1; i < j; i, j = i+1, j-1 {
+		places[i], places[j] = places[j], places[i]
+	}
+	return strings.Join(places, "")
 }
 
 func (ce *CodedError) String() string {

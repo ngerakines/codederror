@@ -19,6 +19,10 @@ func TestSomething(t *testing.T) {
 		So(ce.String(), ShouldEqual, "ABCDEFGHI9")
 	})
 	Convey("CodedError types can be created", t, func() {
+		ce := NewCodedError([]string{"ABC", "DEF", "GHI"}, 32)
+		So(ce.String(), ShouldEqual, "ABCDEFGHIAA")
+	})
+	Convey("CodedError types can be created", t, func() {
 		ce := NewCodedError([]string{"ABC", "DEF", "GHI"}, 33)
 		So(ce.String(), ShouldEqual, "ABCDEFGHIAB")
 	})
