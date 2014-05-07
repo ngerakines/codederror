@@ -80,6 +80,14 @@ func (ce *CodedError) Error() string {
 	return ce.String()
 }
 
+func (ce *CodedError) Namespaces() []string {
+	return ce.namespaces
+}
+
+func (ce *CodedError) Code() uint16 {
+	return ce.code
+}
+
 func NewCodedError(namespaces []string, code uint16) *CodedError {
 	ce := new(CodedError)
 	ce.namespaces = namespaces
