@@ -44,9 +44,17 @@ var codedErrorCharacters = map[int]string{
 	32: "9",
 }
 
-type CodedError struct {
-	namespaces []string
-	code       uint16
+type CodedError interface {
+	Namespaces() []string
+	Code() uint16
+	Description() string
+	Error() string
+}
+
+type codedError struct {
+	namespaces  []string
+	code        uint16
+	description string
 }
 
 func encode(code uint16) string {
@@ -72,25 +80,26 @@ func encode(code uint16) string {
 	return strings.Join(places, "")
 }
 
-func (ce *CodedError) String() string {
+func (ce *codedError) String() string {
 	return fmt.Sprintf("%s%s", strings.Join(ce.namespaces, ""), encode(ce.code))
 }
 
-func (ce *CodedError) Error() string {
+func (ce *codedError) Error() string {
 	return ce.String()
 }
 
-func (ce *CodedError) Namespaces() []string {
+func (ce *codedError) Namespaces() []string {
 	return ce.namespaces
 }
 
-func (ce *CodedError) Code() uint16 {
+func (ce *codedError) Code() uint16 {
 	return ce.code
 }
 
-func NewCodedError(namespaces []string, code uint16) *CodedError {
-	ce := new(CodedError)
-	ce.namespaces = namespaces
-	ce.code = code
-	return ce
+func (ce *codedError) Description() string {
+	return ce.description
+}
+
+func NewCodedError(namespaces []string, code uint16, description string) CodedError {
+	return &codedError{namespaces, code, description}
 }
